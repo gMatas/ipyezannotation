@@ -5,6 +5,7 @@ from ipywidgets import widgets
 from ipyezannotation.annotators.base_annotator import BaseAnnotator
 from ipyezannotation.studio.sample import Sample, SampleStatus
 from ipyezannotation.studio.storage.base_database import BaseDatabase
+from ipyezannotation.studio.storage.sqlite import SQLiteDatabase
 from ipyezannotation.studio.widgets.chip import Chip
 from ipyezannotation.studio.widgets.navigation_box import NavigationBox
 from ipyezannotation.utils.index_counter import IndexCounter
@@ -26,14 +27,14 @@ class Studio(widgets.VBox):
     def __init__(
             self,
             annotator: BaseAnnotator,
-            database: BaseDatabase,
+            database: BaseDatabase = None,
             samples: Sequence[Sample] = None,
             *,
             display_progress: Optional[str] = PROGRESS_BOX_INLINE_DISPLAY_MODE
     ):
         # Setup core annotation components.
         self._annotator = annotator
-        self._database = database
+        self._database = database or SQLiteDatabase()
         self._samples = self._database.sync(samples or [])
         self._sample_indexer = IndexCounter(
             length=len(self._samples),
