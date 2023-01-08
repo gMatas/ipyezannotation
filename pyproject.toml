@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "ipyezannotation"
+version = "0.1.0"
+description = "Easy, simple to customize, data annotation framework."
+authors = ["Matas Gumbinas"]
+readme = "README.md"
+packages = [{ include = "ipyezannotation", from = "src" }]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+ipython = "^8.7.0"
+ipywidgets = "^8.0.3"
+sqlmodel = "^0.0.8"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
