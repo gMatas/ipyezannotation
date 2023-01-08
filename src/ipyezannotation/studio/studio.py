@@ -40,6 +40,8 @@ class Studio(widgets.VBox):
             start=0,
             circular=True
         )
+        if not self._samples:
+            raise ValueError("No samples are available.")
 
         # Setup message component.
         self._message_box = widgets.VBox()
