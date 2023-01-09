@@ -1,9 +1,10 @@
 [tool.poetry]
 name = "ipyezannotation"
-version = "0.1.0"
+version = "0.1.1"
 description = "Easy, simple to customize, data annotation framework."
 authors = ["Matas Gumbinas"]
 readme = "README.md"
+repository = "https://github.com/gMatas/ipyezannotation"
 packages = [{ include = "ipyezannotation", from = "src" }]
 
 [tool.poetry.dependencies]
