@@ -1,10 +1,10 @@
-from typing import Sequence
+from typing import List, Sequence, Tuple
 
 from ipywidgets import widgets
 
 
 class MultiProgress(widgets.HBox):
-    def __init__(self, values: list[float], max_value: float = 1):
+    def __init__(self, values: List[float], max_value: float = 1):
         self._validate_values(values, max_value)
         super().__init__(
             [
@@ -33,7 +33,7 @@ class MultiProgress(widgets.HBox):
         self.update()
 
     @property
-    def values(self) -> tuple[float]:
+    def values(self) -> Tuple[float]:
         return tuple(self._values)
 
     @values.setter
@@ -60,9 +60,9 @@ class MultiProgress(widgets.HBox):
 
     @staticmethod
     def _compute_progress_bar_params(
-            values: list[float],
+            values: List[float],
             max_value: float
-    ) -> tuple[list[float], list[float]]:
+    ) -> Tuple[List[float], List[float]]:
         # Normalize values.
         values = [value / max_value for value in values]
         # Compute bar widgets' widths.

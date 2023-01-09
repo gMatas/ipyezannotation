@@ -1,7 +1,7 @@
 import hashlib
 from dataclasses import dataclass
 from enum import Enum
-from typing import Any, Optional
+from typing import Any, Dict, Optional
 
 from ipyezannotation.studio.coders.base_coder import BaseCoder
 from ipyezannotation.studio.serializable import Serializable
@@ -22,7 +22,7 @@ class Sample(Serializable):
     def identity(self, coder: BaseCoder) -> str:
         return hashlib.md5(coder.encode(self.data)).hexdigest()
 
-    def to_dict(self) -> dict:
+    def to_dict(self) -> Dict:
         return {
             "status": self.status.value,
             "data": self.data,
@@ -30,7 +30,7 @@ class Sample(Serializable):
         }
 
     @classmethod
-    def from_dict(cls, data: dict) -> "Sample":
+    def from_dict(cls, data: Dict) -> "Sample":
         return cls(
             status=SampleStatus(data["status"]),
             data=data["data"],

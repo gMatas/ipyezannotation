@@ -124,19 +124,25 @@ class Studio(widgets.VBox):
         self.update()
         self.update_progress()
 
-    def update(self) -> None:
+    def update(self, *, display: bool = True, status: bool = True, location: bool = True) -> None:
         sample_index = self._sample_indexer.index
         sample = self._samples[sample_index]
-        self.update_status(sample.status)
-        self._sample_location_chip.description = f"{sample_index + 1} / {self._sample_indexer.length}"
-        self._annotator.set_data(sample.annotation)
-        self._annotator.display(sample.data)
+        if display:
+            self._annotator.display(sample.data)
+            self._annotator.set_data(sample.annotation)
 
-    def update_status(self, status: SampleStatus = None) -> None:
-        if not status:
-            sample = self._samples[self._sample_indexer.index]
-            status = sample.status
+        if status:
+            self.update_status()
 
+        if location:
+            self.update_location()
+
+    def update_location(self) -> None:
+        self._sample_location_chip.description = f"{self._sample_indexer.index + 1} / {self._sample_indexer.length}"
+
+    def update_status(self) -> None:
+        sample = self._samples[self._sample_indexer.index]
+        status = sample.status
         self._sample_status_box.children = [self._sample_status_chips[status]]
 
     def navigate_forward(self) -> None:
@@ -154,7 +160,7 @@ class Studio(widgets.VBox):
         sample.annotation = self._annotator.get_data()
         self._database.update(sample)
         self._count_sample_progress(old_status, sample.status)
-        self.update()
+        self.update(display=False, location=False)
 
     def drop_annotation(self) -> None:
         sample = self._samples[self._sample_indexer.index]
@@ -162,7 +168,7 @@ class Studio(widgets.VBox):
         sample.status = SampleStatus.DROPPED
         self._database.update(sample)
         self._count_sample_progress(old_status, sample.status)
-        self.update()
+        self.update(display=False, location=False)
 
     def clear_annotation(self) -> None:
         sample = self._samples[self._sample_indexer.index]
@@ -172,7 +178,7 @@ class Studio(widgets.VBox):
         sample.annotation = self._annotator.get_data()
         self._database.update(sample)
         self._count_sample_progress(old_status, sample.status)
-        self.update()
+        self.update(location=False)
 
     def update_progress(self, completed: int = None, dropped: int = None, total: int = None) -> None:
         new_values = list(self._progress_bar.values)

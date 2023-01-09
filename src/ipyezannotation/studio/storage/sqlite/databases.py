@@ -1,4 +1,4 @@
-from typing import Union
+from typing import List, Union
 
 import sqlmodel
 
@@ -17,7 +17,7 @@ class SQLiteDatabase(BaseDatabase):
         self._engine = sqlmodel.create_engine(url)
         SampleModel.metadata.create_all(self._engine)
 
-    def sync(self, samples: list[Sample] = None) -> list[Sample]:
+    def sync(self, samples: List[Sample] = None) -> List[Sample]:
         existing_ids = self.get_existing_ids()
         if samples:
             provided_samples = {sample.identity(self._coder): sample for sample in samples}
@@ -44,7 +44,7 @@ class SQLiteDatabase(BaseDatabase):
             session.add(model)
             session.commit()
 
-    def add_all(self, samples: list[Sample]) -> None:
+    def add_all(self, samples: List[Sample]) -> None:
         models = [SampleModel.from_sample(sample, coder=self._coder) for sample in samples]
         with sqlmodel.Session(self._engine) as session:
             session.add_all(models)
@@ -58,7 +58,7 @@ class SQLiteDatabase(BaseDatabase):
         sample = model.to_sample(coder=self._coder)
         return sample
 
-    def get_all(self, sample_ids: list[str]) -> list[Sample]:
+    def get_all(self, sample_ids: List[str]) -> List[Sample]:
         statement = sqlmodel.select(SampleModel)
         with sqlmodel.Session(self._engine) as session:
             models = session.exec(statement).all()
@@ -66,7 +66,7 @@ class SQLiteDatabase(BaseDatabase):
         samples = [model.to_sample(coder=self._coder) for model in models]
         return samples
 
-    def get_existing_ids(self) -> list[str]:
+    def get_existing_ids(self) -> List[str]:
         statement = sqlmodel.select(SampleModel.sample_id)
         with sqlmodel.Session(self._engine) as session:
             return session.exec(statement).all()
@@ -85,7 +85,7 @@ class SQLiteDatabase(BaseDatabase):
             SampleModel.sample_id == model.sample_id
         )
         with sqlmodel.Session(self._engine) as session:
-            session.exec(statement)
+            session.execute(statement)
             session.commit()
 
     def remove(self, sample: Union[str, Sample]) -> None:

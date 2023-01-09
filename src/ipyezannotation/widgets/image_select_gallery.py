@@ -1,6 +1,6 @@
 import math
 from dataclasses import dataclass
-from typing import Callable
+from typing import Callable, List, Tuple
 
 from ipywidgets import widgets
 
@@ -23,7 +23,7 @@ class ImageSelectGallery(widgets.GridspecLayout):
                 ")"
             )
 
-    def __init__(self, items: list[Item], n_rows: int = None, n_columns: int = None, grid_gap="8px", **kwargs):
+    def __init__(self, items: List[Item], n_rows: int = None, n_columns: int = None, grid_gap="8px", **kwargs):
         n_items = len(items)
         if not (n_rows or n_columns):
             raise ValueError("Either n_rows or n_columns must be not None.")
@@ -38,8 +38,8 @@ class ImageSelectGallery(widgets.GridspecLayout):
         super().__init__(n_rows, n_columns, **{"grid_gap": grid_gap, **kwargs})
         self._populate_grid(items, n_rows, n_columns)
 
-        self._select_all_hooks: list[Callable[["ImageSelectGallery"], None]] = []
-        self._select_item_hooks: list[Callable[[int, ImageSelect], None]] = []
+        self._select_all_hooks: List[Callable[["ImageSelectGallery"], None]] = []
+        self._select_item_hooks: List[Callable[[int, ImageSelect], None]] = []
 
         def create_select_callback(index: int, widget: ImageSelect):
             def callback(*args):
@@ -54,7 +54,7 @@ class ImageSelectGallery(widgets.GridspecLayout):
             image_select.on_select(create_select_callback(i, image_select))
 
     @property
-    def selected(self) -> tuple[bool, ...]:
+    def selected(self) -> Tuple[bool, ...]:
         return tuple(self._selected)
 
     def is_selected(self, index: int) -> bool:
@@ -101,7 +101,7 @@ class ImageSelectGallery(widgets.GridspecLayout):
             image_kwargs=image_kwargs
         )
 
-    def _populate_grid(self, items: list[Item], n_rows: int, n_columns: int) -> None:
+    def _populate_grid(self, items: List[Item], n_rows: int, n_columns: int) -> None:
         n_items = len(items)
         i_item = 0
         for i in range(n_rows):

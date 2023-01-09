@@ -1,5 +1,5 @@
 import os
-from typing import Optional
+from typing import Dict, List, Optional
 
 import IPython.display
 from ipywidgets import widgets
@@ -15,11 +15,11 @@ class ImageSelectAnnotator(BaseAnnotator):
         self._gallery_widget: Optional[ImageSelectGallery] = None
         super().__init__(display_function=self._display)
 
-    def get_data(self) -> Optional[dict]:
+    def get_data(self) -> Optional[Dict]:
         if self._gallery_widget:
             return {"selected": self._gallery_widget.selected}
 
-    def set_data(self, data: Optional[dict]) -> None:
+    def set_data(self, data: Optional[Dict]) -> None:
         if not self._gallery_widget:
             # No data can be set while gallery widget is not created.
             return
@@ -28,15 +28,15 @@ class ImageSelectAnnotator(BaseAnnotator):
             data = {"selected": [False] * len(self._gallery_widget.selected)}
 
         for index, value in enumerate(data["selected"]):
-            self._gallery_widget.select(index, value, skip_callback=True)
+            self._gallery_widget.select(index, value, skip_callback=False)
 
-    def _display(self, image_paths: list[str]) -> None:
+    def _display(self, image_paths: List[str]) -> None:
         self._gallery_widget = self._create_gallery(image_paths)
         gallery_controls = self._create_gallery_controls(self._gallery_widget)
         gallery_with_controls = widgets.VBox([gallery_controls, widgets.HTML("<hr/>"), self._gallery_widget])
         IPython.display.display(gallery_with_controls)
 
-    def _create_gallery(self, image_paths: list[str]) -> ImageSelectGallery:
+    def _create_gallery(self, image_paths: List[str]) -> ImageSelectGallery:
         gallery_items = []
         for image_path in image_paths:
             image_encoding = os.path.splitext(image_path)[1].lstrip(os.path.extsep)
