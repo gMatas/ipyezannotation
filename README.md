@@ -2,12 +2,23 @@
 
 **ipyezannotation** - Easy, simple to customize, data annotation framework.
 
-## Disclaimer
+# Disclaimer
 
 This project is in early development stage, so don't blame me if it opens-up a black hole in your HDD 😄, 
 other than that **IT WORKS!** 🥳
 
 Docs & examples coming soon.
+
+# Dependencies
+
+This project currently supports `Python>=3.8`.
+
+# Installation
+
+There are two options to install this project:
+
+- Download and install from PyPI by simply running: `pip install ipyezannotation` & you're done!
+- Alternatively, install from source using Poetry. This project uses `poetry>=1.3` to manage dependencies.
 
 # Examples
 
