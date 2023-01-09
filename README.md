@@ -1,6 +1,6 @@
-# ipyezannotation
+# Easy Annotation
 
-Easy, simple to customize, data annotation framework.
+**ipyezannotation** - Easy, simple to customize, data annotation framework.
 
 ## Disclaimer
 
