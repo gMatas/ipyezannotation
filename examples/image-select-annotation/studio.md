@@ -1,20 +1,7 @@
-# Easy Annotation
-
-**ipyezannotation** - Easy, simple to customize, data annotation framework.
-
-## Disclaimer
-
-This project is in early development stage **BUT IT WORKS!** 🥳
-
-Docs & examples coming soon.
-
-# Examples
-
-## Images selection annotation
+# Images selection annotation
 
 Annotation using `ImageSelectAnnotator`.
 
-Define data to annotate with `ImageSelectAnnotator`:
 
 ```python
 source_groups = [
@@ -25,7 +12,6 @@ source_groups = [
 ]
 ```
 
-Convert input data to `Sample`'s:
 
 ```python
 from ipyezannotation.studio.sample import Sample, SampleStatus
@@ -40,25 +26,24 @@ samples = [
 ]
 ```
 
-Initialize database of your liking and synchronize it with your new input samples:
 
 ```python
 from ipyezannotation.studio.storage.sqlite import SQLiteDatabase
 
-db = SQLiteDatabase("sqlite:///:memory:")
-synced_samples = db.sync(samples)
+samples_db = SQLiteDatabase("sqlite:///:memory:")
+synced_samples = samples_db.sync(samples)
 ```
 
-Configure & create annotation `Studio` to label your samples:
 
 ```python
 from ipyezannotation.studio import Studio
 from ipyezannotation.annotators import ImageSelectAnnotator
 
-Studio(
+studio = Studio(
     annotator=ImageSelectAnnotator(n_columns=8),
-    database=db
+    database=samples_db
 )
+studio
 ```
 
-![](./examples/image-select-annotation/output.png)
+![](C:\Users\matas\Documents\Work\ipyezannotation\examples\image-select-annotation\output.png)
