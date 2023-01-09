@@ -4,7 +4,8 @@
 
 ## Disclaimer
 
-This project is in early development stage **BUT IT WORKS!** 🥳
+This project is in early development stage, so don't blame me if it opens-up a black hole in your HDD 😄, 
+other than that **IT WORKS!** 🥳
 
 Docs & examples coming soon.
 
