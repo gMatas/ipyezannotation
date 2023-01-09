@@ -18,7 +18,6 @@ class BaseAnnotator(AbstractAnnotator):  # noqa: ignore linter wanting this clas
     def __init__(self, display_function: Callable[[Any], None]):
         self._display_output = widgets.Output()
         self._display_function = display_function
-        self._submit_hooks: list[Callable[["BaseAnnotator"], None]] = []
 
     @property
     def display_widget(self) -> widgets.Output:
