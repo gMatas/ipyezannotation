@@ -74,3 +74,11 @@ Studio(
 ```
 
 ![](./examples/image-select-annotation/output.png)
+
+# Inspiration
+
+Love letter to the following projects coming soon ❤️
+
+- `ipyannotations`
+- `superintendent`
+- `label-studio`
