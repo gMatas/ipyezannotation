@@ -1,4 +1,4 @@
-from typing import Any, Callable
+from typing import Any, Callable, Tuple
 
 from ipywidgets import widgets
 
@@ -9,6 +9,9 @@ class AbstractAnnotator:
 
     def set_data(self, data: Any) -> None:
         raise NotImplementedError
+
+    def validate(self, *, on_error: Callable[[str], None] = None) -> bool:
+        return True
 
     def clear(self) -> None:
         self.set_data(None)

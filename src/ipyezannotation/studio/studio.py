@@ -61,7 +61,7 @@ class Studio(widgets.VBox):
         progress_box = self._compile_progress_box(display_progress)
 
         # Setup navigation component.
-        self._navigation_box = NavigationBox(mode=NavigationBox.NORMAL_MODE)
+        self._navigation_box = NavigationBox(display_mode=NavigationBox.NORMAL_DISPLAY_MODE)
         self._navigation_box.next_button.on_click(lambda _: self.navigate_forward())
         self._navigation_box.prev_button.on_click(lambda _: self.navigate_backward())
         self._navigation_box.command_submit_button.on_click(lambda _: self._handle_navigation_command())
@@ -146,14 +146,34 @@ class Studio(widgets.VBox):
         self._sample_status_box.children = [self._sample_status_chips[status]]
 
     def navigate_forward(self) -> None:
-        self._sample_indexer.step(1)
+        if self._navigation_box.fast_mode:
+            self._seek_sample(SampleStatus.PENDING)
+        else:
+            self._sample_indexer.step(1)
+
         self.update()
 
     def navigate_backward(self) -> None:
-        self._sample_indexer.step(-1)
+        if self._navigation_box.fast_mode:
+            self._seek_sample(SampleStatus.PENDING, forward=False)
+        else:
+            self._sample_indexer.step(-1)
+
         self.update()
 
+    def _seek_sample(self, status: SampleStatus, forward: bool = True) -> None:
+        step = 1 if forward else -1
+        for i in range(self._sample_indexer.length):
+            self._sample_indexer.step(step)
+            sample = self._samples[self._sample_indexer.index]
+            if sample.status == status:
+                return
+
     def submit_annotation(self) -> None:
+        # Validate data annotated data before submitting it.
+        if not self._annotator.validate(on_error=self._handle_annotator_validation_error_message):
+            return
+
         sample = self._samples[self._sample_indexer.index]
         old_status = sample.status
         sample.status = SampleStatus.COMPLETED
@@ -161,6 +181,9 @@ class Studio(widgets.VBox):
         self._database.update(sample)
         self._count_sample_progress(old_status, sample.status)
         self.update(display=False, location=False)
+
+    def _handle_annotator_validation_error_message(self, message: str) -> None:
+        self.display_message(f"<p style='color: red'><b>Invalid annotator data!</b><br>{message}<p>")
 
     def drop_annotation(self) -> None:
         sample = self._samples[self._sample_indexer.index]
@@ -178,7 +201,7 @@ class Studio(widgets.VBox):
         sample.annotation = self._annotator.get_data()
         self._database.update(sample)
         self._count_sample_progress(old_status, sample.status)
-        self.update(location=False)
+        self.update(display=False, location=False)
 
     def update_progress(self, completed: int = None, dropped: int = None, total: int = None) -> None:
         new_values = list(self._progress_bar.values)
