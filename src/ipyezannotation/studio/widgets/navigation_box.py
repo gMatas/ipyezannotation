@@ -1,3 +1,5 @@
+from typing import Dict
+
 from ipywidgets import widgets
 
 
@@ -24,6 +26,7 @@ class NavigationBox(widgets.HBox):
             icon="forward",
             layout=widgets.Layout(width="32px", min_width="32px")
         )
+        self.speed_toggle_button.observe(self._handle_speed_toggle_button_change, names="value")
 
         self.command_text = widgets.Text(
             placeholder="Enter command...",
@@ -63,3 +66,7 @@ class NavigationBox(widgets.HBox):
             self.layout = widgets.Layout(width="300px")
 
         self._display_mode = mode
+
+    def _handle_speed_toggle_button_change(self, change: Dict) -> None:
+        new_toggle_value = change["new"]
+        self.speed_toggle_button.button_style = "warning" if new_toggle_value else ""
