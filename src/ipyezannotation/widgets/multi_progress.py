@@ -61,16 +61,22 @@ class MultiProgress(widgets.HBox):
     @staticmethod
     def _compute_progress_bar_params(
             values: List[float],
-            max_value: float
+            max_value: float,
+            *,
+            eps: float = 1e-6
     ) -> Tuple[List[float], List[float]]:
         # Normalize values.
         values = [value / max_value for value in values]
+
         # Compute bar widgets' widths.
         last_width = 1 - sum(values[:-1])
+        if abs(1 - last_width) <= eps:
+            last_width = 0
+
         bar_widths = values[:-1] + [last_width]
 
         # Compute bar widgets' values.
-        last_value = values[-1] / last_width
+        last_value = values[-1] if last_width == 0 else (values[-1] / last_width)
         bar_values = [1.0] * (len(values) - 1) + [last_value]
 
         return bar_values, bar_widths
