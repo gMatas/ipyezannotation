@@ -10,8 +10,8 @@ class IndexCounter:
 
     @index.setter
     def index(self, value: int) -> None:
-        if not (0 < value <= self._length):
-            raise IndexError(f"New index is not withing valid range of [0 to {self._length}].")
+        if not (0 < value < self._length):
+            raise IndexError(f"New index is not within valid range of [0 to {self._length}).")
 
         self._index = value
 
