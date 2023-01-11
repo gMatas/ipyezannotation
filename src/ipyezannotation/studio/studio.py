@@ -1,4 +1,4 @@
-from typing import Optional, Sequence
+from typing import Dict, Optional, Sequence
 
 from ipywidgets import widgets
 
@@ -8,6 +8,7 @@ from ipyezannotation.studio.storage.base_database import BaseDatabase
 from ipyezannotation.studio.storage.sqlite import SQLiteDatabase
 from ipyezannotation.studio.widgets.chip import Chip
 from ipyezannotation.studio.widgets.navigation_box import NavigationBox
+from ipyezannotation.studio.widgets.popup_message import PopupMessage
 from ipyezannotation.utils.index_counter import IndexCounter
 from ipyezannotation.widgets.multi_progress import MultiProgress
 
@@ -46,6 +47,7 @@ class Studio(widgets.VBox):
 
         # Setup message component.
         self._message_box = widgets.VBox()
+        self._message_register: Dict[str, PopupMessage] = {}
 
         # Setup progress bar.
         self._progress_bar = MultiProgress([0, 0], max_value=len(self._samples))
@@ -137,6 +139,17 @@ class Studio(widgets.VBox):
         if location:
             self.update_location()
 
+        # Show message that all samples were annotated. Only one such message is displayed at a time.
+        annotation_complete_message_id = "annotation-complete"
+        if abs(sum(self._progress_bar.values) - self._progress_bar.max_value) < 1e-6:
+            self.display_message(
+                f"<p><b>All samples annotated! 🎉</b></p>",
+                kind="success",
+                message_id=annotation_complete_message_id
+            )
+        elif annotation_complete_message_id in self._message_register:
+            self._message_register[annotation_complete_message_id].close_message()
+
     def update_location(self) -> None:
         self._sample_location_chip.description = f"{self._sample_indexer.index + 1} / {self._sample_indexer.length}"
 
@@ -146,6 +159,7 @@ class Studio(widgets.VBox):
         self._sample_status_box.children = [self._sample_status_chips[status]]
 
     def navigate_forward(self) -> None:
+        prev_index = self._sample_indexer.index
         if self._navigation_box.fast_mode:
             self._seek_sample(SampleStatus.PENDING)
         else:
@@ -235,34 +249,30 @@ class Studio(widgets.VBox):
             total = int(self._progress_bar.max_value)
             self._update_progress_text(completed, dropped, total)
 
-    def display_message(self, html_value: str) -> None:
-        def remove_message_item(item):
+    def display_message(self, html_value: str, kind: str = "danger", message_id: str = None) -> None:
+        """Display HTML message and register it.
+        """
+        popup_message = PopupMessage(html_value=html_value, kind=kind, message_id=message_id)
+        if popup_message.message_id in self._message_register:
+            # Do not display the message if it is already being displayed.
+            return
+
+        def remove_message_item(message: PopupMessage) -> None:
+            # Unregister message.
+            self._message_register.pop(message.message_id)
+            # Remove message from the message box.
             items_ = list(self._message_box.children)
-            items_.remove(item)
+            items_.remove(message)
             self._message_box.children = items_
 
-        clear_button = widgets.Button(
-            button_style="danger",
-            layout=widgets.Layout(width="0", height="auto", padding="4px")
-        )
-        message_widget = widgets.HBox(
-            [
-                clear_button,
-                widgets.HTML(
-                    html_value,
-                    style={
-                        "text_color": "black",
-                        "background": "mistyrose"
-                    },
-                    layout=widgets.Layout(width="100%", padding="4px")
-                )
-            ]
-        )
-        clear_button.on_click(lambda _: remove_message_item(message_widget))
+        popup_message.on_close(remove_message_item)
+
+        # Register new message.
+        self._message_register[popup_message.message_id] = popup_message
 
         # Add message item to the beginning of the main messages box.
         items = list(self._message_box.children)
-        items.append(message_widget)
+        items.append(popup_message)
         self._message_box.children = items
 
     def _count_sample_progress(self, old_status: SampleStatus, new_status: SampleStatus) -> None:
