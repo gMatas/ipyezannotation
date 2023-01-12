@@ -22,6 +22,8 @@ class IndexCounter:
     def step(self, by: int) -> None:
         index = self._index + by
         if self.circular:
+            if self._length == 1:
+                index = 0
             if index >= self._length:
                 index %= self._length
             elif index < 0:
