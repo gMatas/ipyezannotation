@@ -350,7 +350,7 @@ class Studio(widgets.VBox):
         if text.isdecimal():
             # If command is a single decimal number.
             try:
-                self._sample_indexer.index = int(text)
+                self._sample_indexer.index = int(text) + 1  # UI indexing is 1-based, not 0-based
             except IndexError as e:
                 self.display_message(f"<p style='color: red'>{repr(e)}</p>")
 

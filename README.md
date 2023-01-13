@@ -40,15 +40,15 @@ source_groups = [
 Convert input data to `Sample`'s:
 
 ```python
-from ipyezannotation.studio.sample import Sample, SampleStatus
+from ipyezannotation.studio import Sample, SampleStatus
 
 samples = [
     Sample(
         status=SampleStatus.PENDING,
-        data=group,
+        data=image_paths,
         annotation=None
     )
-    for group in source_groups
+    for image_paths in source_groups
 ]
 ```
 
