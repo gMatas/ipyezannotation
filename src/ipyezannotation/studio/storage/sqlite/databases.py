@@ -2,8 +2,7 @@ from typing import List, Union
 
 import sqlmodel
 
-from ipyezannotation.studio.coders.base_coder import BaseCoder
-from ipyezannotation.studio.coders.json_coder import JsonCoder
+from ipyezannotation.studio.coders import BaseCoder, JsonCoder
 from ipyezannotation.studio.sample import Sample
 from ipyezannotation.studio.storage.base_database import BaseDatabase
 from ipyezannotation.studio.storage.sqlite.models import SampleModel

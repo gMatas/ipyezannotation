@@ -14,6 +14,9 @@ from ipyezannotation.widgets.multi_progress import MultiProgress
 
 
 class Studio(widgets.VBox):
+    # Progress box display modes.
+    PROGRESS_BOX_INLINE_DISPLAY_MODE = "inline"
+    PROGRESS_BOX_BLOCK_DISPLAY_MODE = "block"
     # Progress bar configuration.
     _COMPLETED_BAR_INDEX = 0
     _DROPPED_BAR_INDEX = 1
@@ -21,9 +24,6 @@ class Studio(widgets.VBox):
         SampleStatus.COMPLETED: _COMPLETED_BAR_INDEX,
         SampleStatus.DROPPED: _DROPPED_BAR_INDEX
     }
-    # Progress box display modes.
-    PROGRESS_BOX_INLINE_DISPLAY_MODE = "inline"
-    PROGRESS_BOX_BLOCK_DISPLAY_MODE = "block"
 
     def __init__(
             self,

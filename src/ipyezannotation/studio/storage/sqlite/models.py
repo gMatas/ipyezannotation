@@ -3,7 +3,7 @@ from typing import Optional
 
 from sqlmodel import Field, SQLModel
 
-from ipyezannotation.studio.coders.base_coder import BaseCoder
+from ipyezannotation.studio.coders import BaseCoder
 from ipyezannotation.studio.sample import Sample, SampleStatus
 
 

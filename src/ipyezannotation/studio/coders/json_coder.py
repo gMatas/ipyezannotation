@@ -1,7 +1,7 @@
 import json
 from typing import Any, cast
 
-from ipyezannotation.studio.coders.base_coder import BaseCoder
+from ipyezannotation.studio.coders import BaseCoder
 from ipyezannotation.studio.sample import Sample
 
 

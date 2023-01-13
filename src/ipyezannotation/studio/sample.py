@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import Any, Dict, Optional
 
-from ipyezannotation.studio.coders.base_coder import BaseCoder
+from ipyezannotation.studio.coders import BaseCoder
 from ipyezannotation.studio.serializable import Serializable
 
 

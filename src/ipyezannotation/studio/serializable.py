@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from ipyezannotation.studio.coders.base_coder import BaseCoder
+from ipyezannotation.studio.coders import BaseCoder
 
 
 class Serializable(ABC):
