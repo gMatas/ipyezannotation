@@ -292,8 +292,9 @@ class Studio(widgets.VBox):
         )
 
     def _update_progress_text(self, completed: int, dropped: int, total: int) -> None:
-        self._completed_progress_text.value = f"{completed} ({round(completed / total * 100)}%)"
-        self._dropped_progress_text.value = f"{dropped} ({round(dropped / total * 100)}%)"
+
+        self._completed_progress_text.value = f"{completed} ({int(completed / total * 100)}%)"
+        self._dropped_progress_text.value = f"{dropped} ({int(dropped / total * 100)}%)"
         self._total_progress_text.value = f"{total}"
 
     def _compile_progress_box(self, mode: Optional[str]) -> Optional[widgets.Box]:

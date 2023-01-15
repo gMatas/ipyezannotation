@@ -11,7 +11,8 @@ Docs & examples coming soon.
 
 # Dependencies
 
-This project currently supports `Python>=3.8`.
+This project currently supports `python>=3.8`. In future version of this project (possibly `ipyezannotation>=1.0.0`) 
+only later python versions will be supported starting from 3.9 or 3.10.
 
 # Installation
 
