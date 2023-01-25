@@ -24,6 +24,8 @@ class Studio(widgets.VBox):
         SampleStatus.COMPLETED: _COMPLETED_BAR_INDEX,
         SampleStatus.DROPPED: _DROPPED_BAR_INDEX
     }
+    # Navigation configuration.
+    _DEFAULT_NAV_SEEK_STATUS = SampleStatus.PENDING
 
     def __init__(
             self,
@@ -67,6 +69,7 @@ class Studio(widgets.VBox):
         self._navigation_box.next_button.on_click(lambda _: self.navigate_forward())
         self._navigation_box.prev_button.on_click(lambda _: self.navigate_backward())
         self._navigation_box.command_submit_button.on_click(lambda _: self._handle_navigation_command())
+        self._current_navigation_seek_status = self._DEFAULT_NAV_SEEK_STATUS
 
         # Setup actions component.
         self._submit_action_button = widgets.Button(description="Submit", icon="check", button_style="success")
@@ -161,7 +164,7 @@ class Studio(widgets.VBox):
     def navigate_forward(self) -> None:
         prev_index = self._sample_indexer.index
         if self._navigation_box.fast_mode:
-            self._seek_sample(SampleStatus.PENDING)
+            self._seek_sample(self._current_navigation_seek_status)
         else:
             self._sample_indexer.step(1)
 
@@ -169,7 +172,7 @@ class Studio(widgets.VBox):
 
     def navigate_backward(self) -> None:
         if self._navigation_box.fast_mode:
-            self._seek_sample(SampleStatus.PENDING, forward=False)
+            self._seek_sample(self._current_navigation_seek_status, forward=False)
         else:
             self._sample_indexer.step(-1)
 
@@ -354,7 +357,25 @@ class Studio(widgets.VBox):
                 self._sample_indexer.index = int(text) + 1  # UI indexing is 1-based, not 0-based
             except IndexError as e:
                 self.display_message(f"<p style='color: red'>{repr(e)}</p>")
-
             self.update()
+        elif text.startswith("seek status "):
+            # Command to change sample status to seek.
+            target_status = text.removeprefix("seek status ").strip()
+            try:
+                if target_status == "default":
+                    self._current_navigation_seek_status = self._DEFAULT_NAV_SEEK_STATUS
+                else:
+                    self._current_navigation_seek_status = SampleStatus(target_status)
+
+                self.display_message(
+                    (
+                        "<p><b>Navigation configured.</b></p>"
+                        "<p>currently seeking samples with status "
+                        f"{self._current_navigation_seek_status.value.upper()}.</p>"
+                    ),
+                    kind="info"
+                )
+            except ValueError as e:
+                self.display_message(f"<p style='color: red'>{repr(e)}</p>")
         else:
             self.display_message(f"<p style='color: red'>Invalid command: {text}.</p>")
