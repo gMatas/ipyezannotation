@@ -39,6 +39,7 @@ class Studio(widgets.VBox):
         self._annotator = annotator
         self._database = database or SQLiteDatabase()
         self._samples = self._database.sync(samples or [])
+        self._sample_ids = [sample.identity(self._database.coder) for sample in self._samples]
         self._sample_indexer = IndexCounter(
             length=len(self._samples),
             start=0,
@@ -358,6 +359,12 @@ class Studio(widgets.VBox):
             except IndexError as e:
                 self.display_message(f"<p style='color: red'>{repr(e)}</p>")
             self.update()
+        elif text.startswith("find "):
+            target_sample_id = text.removeprefix("find ").strip()
+            try:
+                self._sample_indexer.index = self._sample_ids.index(target_sample_id)
+            except ValueError:
+                self.display_message(f"<p style='color: red'>Sample '{target_sample_id}' not found.</p>")
         elif text.startswith("seek status "):
             # Command to change sample status to seek.
             target_status = text.removeprefix("seek status ").strip()

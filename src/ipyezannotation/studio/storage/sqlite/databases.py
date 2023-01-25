@@ -16,6 +16,10 @@ class SQLiteDatabase(BaseDatabase):
         self._engine = sqlmodel.create_engine(url)
         SampleModel.metadata.create_all(self._engine)
 
+    @property
+    def coder(self) -> BaseCoder:
+        return self._coder
+
     def sync(self, samples: List[Sample] = None) -> List[Sample]:
         existing_ids = self.get_existing_ids()
         if samples:
