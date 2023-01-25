@@ -22,8 +22,8 @@ class NavigationBox(widgets.HBox):
         self.next_button = widgets.Button(tooltip="Right", icon="arrow-right")
         self.speed_toggle_button = widgets.ToggleButton(
             value=False,
-            tooltip="Fast mode",
-            icon="forward",
+            tooltip="Super mode",
+            icon="bolt",
             layout=widgets.Layout(width="32px", min_width="32px")
         )
         self.speed_toggle_button.observe(self._handle_speed_toggle_button_change, names="value")
