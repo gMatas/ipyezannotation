@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ipyezannotation"
-version = "0.2.3"
+version = "0.2.4"
 description = "Easy, simple to customize, pythonic data annotation framework."
 authors = ["Matas Gumbinas"]
 readme = "README.md"

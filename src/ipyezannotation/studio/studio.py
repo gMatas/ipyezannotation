@@ -356,13 +356,14 @@ class Studio(widgets.VBox):
             # If command is a single decimal number.
             try:
                 self._sample_indexer.index = int(text) - 1  # UI indexing is 1-based, not 0-based
+                self.update()
             except IndexError as e:
                 self.display_message(f"<p style='color: red'>{repr(e)}</p>")
-            self.update()
         elif text.startswith("find "):
             target_sample_id = text.removeprefix("find ").strip()
             try:
                 self._sample_indexer.index = self._sample_ids.index(target_sample_id)
+                self.update()
             except ValueError:
                 self.display_message(f"<p style='color: red'>Sample '{target_sample_id}' not found.</p>")
         elif text.startswith("seek status "):
