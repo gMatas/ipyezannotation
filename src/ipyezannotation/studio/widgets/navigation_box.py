@@ -54,13 +54,13 @@ class NavigationBox(widgets.HBox):
         if not force and mode == self._display_mode:
             return
         elif mode == self.NORMAL_DISPLAY_MODE:
-            self.display_mode_button.tooltip = "Search"
-            self.display_mode_button.icon = "search"
+            self.display_mode_button.tooltip = "Command mode"
+            self.display_mode_button.icon = "terminal"
             self.children = [self.prev_button, self.next_button, self.speed_toggle_button, self.display_mode_button]
             self.layout = widgets.Layout(width="300px")
         elif mode == self.COMMAND_DISPLAY_MODE:
             self.command_text.value = ""
-            self.display_mode_button.tooltip = "Back"
+            self.display_mode_button.tooltip = "Normal mode"
             self.display_mode_button.icon = "times"
             self.children = [self.command_text, self.command_submit_button, self.display_mode_button]
             self.layout = widgets.Layout(width="300px")
